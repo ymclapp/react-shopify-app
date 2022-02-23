@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react"
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom"
+import Products from "./Products"
+import Cart from "./Cart"
+import Home from "./Home"
+import ProductView from "./ProductView"
+import { useShopify } from "../hooks"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default (props) => {
+	const {
+		createShop,
+		createCheckout,
+		fetchProducts,
+		// fetchCollection,
+	} = useShopify()
+
+	useEffect(() => {
+		createShop()
+		fetchProducts()
+		createCheckout()
+		// fetchCollection()
+	}, [])
+
+	return (
+		<Router>
+			<div id="App">
+				<Route exact path="/" render={() => <Redirect to="/Home" />} />
+				<Route path="/Home" component={Home} />
+				<Route path="/Home" component={Products} />
+				<Route path="/Product/:productId" component={ProductView} />
+				<Route path="/" component={Cart} />
+			</div>
+		</Router>
+	)
 }
-
-export default App;
